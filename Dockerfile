@@ -24,6 +24,8 @@ COPY --from=deps /opt/node_modules node_modules
 
 ENV DISPLAY=:1
 
+ENV CHROME_PATH /usr/bin/google-chrome
+
 ARG PORT=3000
 ENV PORT $PORT
 EXPOSE $PORT
