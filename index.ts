@@ -10,9 +10,9 @@ const app = express()
 
 let browser: Browser
 
+puppeteer.use(AdBlockerPlugin())
 puppeteer.use(RecaptchaPlugin())
 puppeteer.use(StealthPlugin())
-puppeteer.use(AdBlockerPlugin())
 
 app.get('/', async (request, response) => {
   if (!browser) {
