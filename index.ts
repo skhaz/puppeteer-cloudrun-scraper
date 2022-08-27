@@ -8,13 +8,18 @@ import { captureHeapSnapshot, findObjectsWithProperties } from 'puppeteer-heap-s
 
 const app = express()
 
+app.use(express.json())
+app.use(express.urlencoded({ extended: true}))
+
 let browser: Browser
 
 puppeteer.use(AdBlockerPlugin())
 puppeteer.use(RecaptchaPlugin())
 puppeteer.use(StealthPlugin())
 
-app.get('/', async (request, response) => {
+app.post('/', async (request, response) => {
+  const { url, objects } = request.body
+
   if (!browser) {
     browser = await puppeteer.launch({
       headless: true,
@@ -33,14 +38,14 @@ app.get('/', async (request, response) => {
   }
 
   const page = await browser.newPage()
-  await page.goto('https://www.youtube.com/watch?v=L_o_O7v1ews')
+  await page.goto(url)
   await page.waitForFunction(() => document.readyState === 'complete')
   const heapSnapshot = await captureHeapSnapshot(page.target())
   const client = await page.target().createCDPSession()
   await client.send('Network.clearBrowserCookies')
   await page.close()
 
-  response.json(findObjectsWithProperties(heapSnapshot, ['channelId', 'viewCount', 'keywords']))
+  response.json(findObjectsWithProperties(heapSnapshot, objects))
 })
 
 app.listen(process.env.PORT, () => {
