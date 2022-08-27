@@ -22,7 +22,7 @@ WORKDIR /app
 COPY --from=build /opt/dist .
 COPY --from=deps /opt/node_modules node_modules
 
-ENV DISPLAY=:1
+ENV DISPLAY :1
 
 ENV CHROME_PATH /usr/bin/google-chrome
 

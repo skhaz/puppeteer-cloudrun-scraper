@@ -18,7 +18,7 @@ app.get('/', async (request, response) => {
   if (!browser) {
     browser = await puppeteer.launch({
       headless: true,
-      userDataDir: '/tmp/user-data-dir',
+      userDataDir: '/tmp',
       executablePath: process.env.CHROME_PATH,
       args: [
         '--disable-gpu',
